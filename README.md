@@ -11,7 +11,7 @@ In other words, it means that moving one location on the FPN level is equivalent
 We add some convolutional block to turn this backbone in to FPN like in this following figure:
 
 
-<p align="center" float='left'>
+<p>
   <img src="resource/feature_pyramid.png" width="80%" />
 
 </p>
