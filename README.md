@@ -11,7 +11,10 @@ In other words, it means that moving one location on the FPN level is equivalent
 We add some convolutional block to turn this backbone in to FPN like in this following figure:
 <img src="https://github.com/FreyMiggen/OBJECT_DETECTION/tree/d8b7f08061d954166f12a13df9203b13d4794644/resource/feature_pyramid.png" alt="Feature Pyramid Model">
 
-
+<p align="center" float='left'>
+  <img src="resource/feature_pyramid.png" width="400" />
+    <img src="resource/feature_pyramid.png" width="400" />
+</p>
 
 For more details, see Figure 3 in [FPN paper](https://arxiv.org/abs/1612.03144).
 FPN will convert these `(c3, c4, c5)` multi-scale features to `(p3, p4, p5)`. These notations "p3", "p4", "p5" are called feature maps at different level.
