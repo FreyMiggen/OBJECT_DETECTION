@@ -17,7 +17,7 @@ We add some convolutional block to turn this backbone in to FPN like in this fol
 
 For more details, see Figure 3 in [FPN paper](https://arxiv.org/abs/1612.03144).
 FPN will convert these `(c3, c4, c5)` multi-scale features to `(p3, p4, p5)`. These notations "p3", "p4", "p5" will, from now on, called feature maps at different levels.
-Some more detail on how to implement FPN from backbone network:
+Some pseudocode for more detail on how to implement FPN from backbone network:
 
 ```
 # Create three separate 1x1 convolutional layer to perform 'lateral connection' (lateral arrow in figure 3)
