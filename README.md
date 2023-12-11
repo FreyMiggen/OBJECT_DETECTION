@@ -10,21 +10,42 @@ These values `(8, 16, 32)` are called the "stride" of these features.
 In other words, it means that moving one location on the FPN level is equivalent to moving `stride` pixels in the input image.
 We add some convolutional block to turn this backbone in to FPN like in this following figure:
 
-
 <p>
   <img src="resource/feature_pyramid.png" width="80%" />
 
 </p>
 
 For more details, see Figure 3 in [FPN paper](https://arxiv.org/abs/1612.03144).
-FPN will convert these `(c3, c4, c5)` multi-scale features to `(p3, p4, p5)`. These notations "p3", "p4", "p5" are called feature maps at different level.
+FPN will convert these `(c3, c4, c5)` multi-scale features to `(p3, p4, p5)`. These notations "p3", "p4", "p5" will, from now on, called feature maps at different levels.
+Some more detail on how to implement FPN from backbone network
+
+# 1x1 conv for lateral connection
+        backbone_feats = self.backbone(images)
+        c3,c4,c5=backbone_feats['c3'],backbone_feats['c4'],backbone_feats['c5']
+        p5=self.fpn_params['la5'](c5)
+
+        p4=self.fpn_params['la4'](c4)
+        p5_up=F.interpolate(p5,size=c4.shape[2:])
+        p4=p4+p5_up
+
+        p3=self.fpn_params['la3'](c3)
+        p4_up=F.interpolate(p4,c3.shape[2:])
+        p3=p3+p4_up
+
+
+        p5=self.fpn_params['out5'](p5)
+        p4=self.fpn_params['out4'](p4)
+        p3=self.fpn_params['out3'](p3)
+
+        fpn_feats = {"p3": p3, "p4": p4, "p5": p5}
+`
 
 ## 2. Fully-Convolutional One-Stage Object Detection
 
-FCOS is a fully-convolutional one-stage object detection model — unlike two-stage detectors like Faster R-CNN, it does not comprise any custom modules like anchor boxes, RoI pooling/align, and RPN proposals (for second stage). Due to its simplicity, you will implement core components of FCOS in this first half of the assignment, and then re-use many of them to implement Faster R-CNN in the second half.
+FCOS is a fully-convolutional one-stage object detection model — unlike two-stage detectors like Faster R-CNN, it does not comprise any custom modules like anchor boxes, RoI pooling/align, and RPN proposals (for second stage).
 
 An overview of the model in shown below. In case it does not load, see [Figure 2 in FCOS paper](https://arxiv.org/abs/1904.01355).
-It details three modeling components: backbone, feature pyramid network (FPN), and head (prediction layers).
+It details three modeling components: backbone, feature pyramid network (FPN), and head (prediction layers). Two of those are explained in Section 1.
 First, we will implement FCOS as shown in this figure, and then implement components to train it with the PASCAL VOC 2007 dataset we loaded above.
 
 <img src="https://production-media.paperswithcode.com/methods/Screen_Shot_2020-06-23_at_3.34.09_PM_SAg1OBo.png" alt="FCOS Model Figure" width="80%">
