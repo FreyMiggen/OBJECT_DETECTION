@@ -17,29 +17,27 @@ We add some convolutional block to turn this backbone in to FPN like in this fol
 
 For more details, see Figure 3 in [FPN paper](https://arxiv.org/abs/1612.03144).
 FPN will convert these `(c3, c4, c5)` multi-scale features to `(p3, p4, p5)`. These notations "p3", "p4", "p5" will, from now on, called feature maps at different levels.
-Some more detail on how to implement FPN from backbone network
+Some more detail on how to implement FPN from backbone network:
 
-# 1x1 conv for lateral connection
-        backbone_feats = self.backbone(images)
-        c3,c4,c5=backbone_feats['c3'],backbone_feats['c4'],backbone_feats['c5']
-        p5=self.fpn_params['la5'](c5)
+```
+# Create three separate 1x1 convolutional layer to perform 'lateral connection' (lateral arrow in figure 3)
+        la3=nn.Conv2d(out_channels_c3,out_channels,(1,1))
+        la4=nn.Conv2d(out_channels_c4,out_channels,(1,1))
+        la5=nn.Conv2d(out_channels_c5,out_channels,(1,1))
 
-        p4=self.fpn_params['la4'](c4)
-        p5_up=F.interpolate(p5,size=c4.shape[2:])
+# After extract multi-scale features c3,c4,c5 from backbone network (look at figure above to understand logic behind this implementation)
+        p5=la5(c5)
+
+        p4=la4(c4)
+        p5_up=F.interpolate(p5,size=c4.shape[2:])  
         p4=p4+p5_up
 
-        p3=self.fpn_params['la3'](c3)
+        p3=la3(c3)
         p4_up=F.interpolate(p4,c3.shape[2:])
         p3=p3+p4_up
 
-
-        p5=self.fpn_params['out5'](p5)
-        p4=self.fpn_params['out4'](p4)
-        p3=self.fpn_params['out3'](p3)
-
-        fpn_feats = {"p3": p3, "p4": p4, "p5": p5}
-`
-
+```
+In reality, after obtaining p3,p4,p5; we will pass these through additional conv layers for better performance.
 ## 2. Fully-Convolutional One-Stage Object Detection
 
 FCOS is a fully-convolutional one-stage object detection model — unlike two-stage detectors like Faster R-CNN, it does not comprise any custom modules like anchor boxes, RoI pooling/align, and RPN proposals (for second stage).
