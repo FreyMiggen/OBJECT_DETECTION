@@ -1,6 +1,7 @@
 # RE-IMPLEMENT FCOS AND FASTER-CNN PAPER
 
-
+**Note:** This project is, in fact, my assigment for [Deep Learning for Computer Vision](https://www.youtube.com/playlist?list=PL5-TkQAfAZFbzxjBHtzdVCWE0Zbhomg7r) provided
+by Michigan University. I highly recommend this course for everybody who wants to have a more comprehensive grasp of important concepts in DL.
 ## 1. Backbone and Feature Pyramid Network (FPN)
 
 First, we start building the backbone and FPN of our detector (blue and green parts above). It is the core component that takes in an image and outputs its features of different scales. It can be any type of convolutional network that progressively downsamples the image (e.g. via intermediate max pooling).
@@ -69,7 +70,7 @@ RPN provides region proposals for the second stage. Now, let think about it for 
 
 
 ### 3.2. Faster R-CNN second stage
-Here, we briefly describe the second half Fast R-CNN.
+Here, we briefly describe the second half Faster R-CNN.
 
 Given a set of proposal boxes from RPN (per FPN level, per image),
 we warp each region from the correspondng map to a fixed size 7x7 by using [RoI Align](https://arxiv.org/pdf/1703.06870.pdf).
