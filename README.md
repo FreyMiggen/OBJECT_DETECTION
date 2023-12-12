@@ -58,9 +58,9 @@ Faster R-CNN is a **two-stage** object detector, based on [Faster R-CNN](https:/
 
 ### 3.1. Faster R-CNN first stage: Region Proposal Network (RPN)
 We will now implement the first-stage of Faster R-CNN. It comprises a **Region Proposal Network (RPN)** that learns to predict general _object proposals_, which will then be used by the second stage to make final predictions. 
-<img src="https://www.google.com.vn/url?sa=i&url=https%3A%2F%2Fwww.geeksforgeeks.org%2Ffaster-r-cnn-ml%2F&psig=AOvVaw33-PrEvrGw-ljLvqvg00Fp&ust=1702437148038000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCMjLlIz6iIMDFQAAAAAdAAAAABAa" alt= "Faster R-CNN architecture" width="80%">
 
-<img src="resouce/FasterR-CNN.png" alt= "Faster R-CNN architecture" width="80%">
+
+<img src="resource/FasterR-CNN.png" alt= "Faster R-CNN architecture" width="80%">
 **RPN prediction:** An input image is passed through the backbone and we obtain its FPN feature maps `(p3, p4, p5)`.
 RPN provides region proposals for the second stage. Now, let think about it for a second. In order to give a region proposal, RPN has to provide 2 things: location of the region proposal and the confidence level of the model in determining that region contains an object. Technically, the RPN predicts multiple values at _every location on FPN features_. Faster R-CNN is _anchor-based_ — the model assumes that every location has multiple pre-defined boxes (called "anchors") and it predicts two measures per anchor, per FPN location:
 
